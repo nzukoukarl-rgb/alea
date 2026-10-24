@@ -1,0 +1,3 @@
+{
+  "installCommand": "npm install --omit=dev --legacy-peer-deps --no-audit --no-fund"
+}
