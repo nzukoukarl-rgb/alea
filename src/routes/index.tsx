@@ -36,7 +36,7 @@ function Home() {
     <>
       <section className="hero">
         <div>
-          <p className="kicker">simulation de vie · registre éducatif · 55 pays</p>
+          <p className="kicker">simulation de vie · registre éducatif · tirage mondial</p>
           <h1 className="display">Aléa</h1>
           <p className="lede">
             En ce moment, des enfants naissent. Vous n'en choisissez aucun. Aléa en tire un au sort, selon le poids des naissances, puis vous

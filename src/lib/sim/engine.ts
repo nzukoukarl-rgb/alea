@@ -1,4 +1,5 @@
 import { COUNTRIES, type Country } from "./countries.ts";
+import { makeBirthIdentity, type SexLabel } from "@/engine/alea-core";
 
 export type Pace = "chapitres" | "annees";
 export type Priority = "lien" | "savoir" | "avoir" | "sante";
@@ -83,6 +84,31 @@ export type LifeState = {
   archive: boolean;
   archiveBlurb: string | null;
   rngCursor: number;
+  city?: string;
+  religion?: string;
+  roots?: string;
+  incomeQuintile?: number;
+  parentAge?: number;
+  siblings?: number;
+  datasetVersion?: string;
+  realtime?: { pib: number; esperance: number; gini: number; inflation: number; updatedAt: string; source: string; degraded?: boolean };
+};
+
+export type BirthProfile = {
+  country: Country;
+  probability: number;
+  sex: SexLabel;
+  name: string;
+  city: string;
+  religion: string;
+  roots: string;
+  incomeQuintile: number;
+  incomePpp: number;
+  siblings: number;
+  parentAge: number;
+  lifeExpectancy: number;
+  realtime: { pib: number; esperance: number; gini: number; inflation: number; updatedAt: string; source: string; degraded?: boolean };
+  datasetVersion: string;
 };
 
 const MASK = (1n << 64n) - 1n;
@@ -485,13 +511,27 @@ function blank(seed: number, pace: Pace, edu: boolean): LifeState {
   };
 }
 
-function newLifeInner(seed: number, pace: Pace, edu: boolean, withKin: boolean): LifeState {
+function newLifeInner(seed: number, pace: Pace, edu: boolean, withKin: boolean, profile?: BirthProfile): LifeState {
   const state = blank(seed, pace, edu);
-  const country = pickCountry(state);
+  const fallback = makeBirthIdentity(seed);
+  const country = profile?.country ?? fallback.country;
   applyCountry(state, country);
-  state.sex = roll(state) < 0.488 ? "f" : "m";
-  state.percentile = samplePercentile(state, country.gini);
-  state.name = pickName(state, country.region, state.sex);
+  state.sex = profile?.sex ?? fallback.sex;
+  state.percentile = samplePercentile(state, profile?.realtime.gini ?? country.gini);
+  state.name = profile?.name ?? fallback.name;
+  state.city = profile?.city ?? fallback.city;
+  state.religion = profile?.religion ?? fallback.religion;
+  state.roots = profile?.roots ?? fallback.roots;
+  state.incomeQuintile = profile?.incomeQuintile ?? fallback.incomeQuintile;
+  state.parentAge = profile?.parentAge ?? fallback.parentAge;
+  state.siblings = profile?.siblings ?? fallback.siblings;
+  state.datasetVersion = profile?.datasetVersion ?? "wpp-2024-culture-v1";
+  state.realtime = profile?.realtime;
+  if (profile?.realtime) {
+    state.le = profile.realtime.esperance;
+    state.gini = profile.realtime.gini;
+    state.gdpPpp = profile.realtime.pib;
+  }
   state.sante = clampU8(78 - country.u5 / 8 + roll(state) * 18);
   state.lien = clampU8(40 + roll(state) * 35);
   state.savoir = clampU8((country.school / 16) * 35 + roll(state) * 15);
@@ -528,6 +568,10 @@ function glimpse(seed: number): Kin {
 
 export function newLife(seed: number, pace: Pace, edu: boolean): LifeState {
   return newLifeInner(seed >>> 0, pace, edu, true);
+}
+
+export function newLifeWithProfile(seed: number, pace: Pace, edu: boolean, profile: BirthProfile): LifeState {
+  return newLifeInner(seed >>> 0, pace, edu, true, profile);
 }
 
 function applyThen(state: LifeState, then: Then) {
@@ -610,9 +654,10 @@ export function verdict(life: LifeState): string {
 }
 
 export function freshSeed(): number {
-  const a = Math.floor(Math.random() * 0xffffffff);
-  const b = Date.now() & 0xffff;
-  return (a ^ (b << 8)) >>> 0;
+  const values = new Uint32Array(1);
+  if (typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function") crypto.getRandomValues(values);
+  else values[0] = 0x9e3779b9;
+  return values[0]! >>> 0;
 }
 
 export const DISCLAIMER =

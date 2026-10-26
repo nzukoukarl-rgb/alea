@@ -1,8 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { LivesSync } from "@/components/lives-sync";
 import { UserButton } from "@/lib/auth/gates";
 import { DISCLAIMER } from "@/lib/sim/engine";
+import { COUNTRIES } from "@/lib/sim/countries";
 import { useAlea } from "@/lib/store";
 
 const LINKS = [
@@ -20,6 +21,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const edu = useAlea((s) => s.edu);
   const setTheme = useAlea((s) => s.setTheme);
   const setEdu = useAlea((s) => s.setEdu);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -35,21 +37,22 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <span className="mark" />
           Aléa
         </Link>
-        <nav className="nav">
+        <button className="menu-toggle ghost" type="button" aria-expanded={menuOpen} aria-controls="primary-navigation" onClick={() => setMenuOpen((open) => !open)}>Menu</button>
+        <nav id="primary-navigation" className={`nav ${menuOpen ? "nav--open" : ""}`}>
           {LINKS.map(([href, label]) => (
             <Link key={href} to={href} className={path === href || path.startsWith(href) ? "on" : ""}>
               {label}
             </Link>
           ))}
         </nav>
-        <button className="ghost" type="button" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+        <div className="header-actions"><button className="ghost" type="button" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
           {theme === "dark" ? "Clair" : "Sombre"}
         </button>
         <button className="ghost" type="button" onClick={() => setEdu(!edu)}>
           {edu ? "Mode classe actif" : "Mode classe"}
         </button>
         <UserButton />
-        <LivesSync />
+        <LivesSync /></div>
       </header>
       <main id="contenu" className="wrap">
         {children}
@@ -58,7 +61,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <div className="wrap">
           <nav>
             <Link to="/compare">Comparer</Link>
-            <Link to="/pays">55 pays</Link>
+            <Link to="/pays">{COUNTRIES.length} pays</Link>
             <Link to="/ecoute">Écoute</Link>
             <Link to="/confidentialite">Confidentialité</Link>
             <Link to="/conditions">Conditions</Link>

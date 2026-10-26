@@ -6,7 +6,7 @@ import { grouped } from "@/lib/sim/engine";
 export const Route = createFileRoute("/pays")({
   head: () => ({
     meta: [
-      { title: "Statistiques de 55 pays · Aléa" },
+      { title: "Statistiques des pays couverts · Aléa" },
       { name: "description", content: "Part des naissances, espérance de vie, mortalité des enfants et revenu par habitant. Chiffres éducatifs arrondis." },
     ],
   }),
@@ -22,7 +22,7 @@ function CountriesPage() {
     <section className="section">
       <h1>Si le tirage tombait ici</h1>
       <p className="lede">
-        55 pays qui concentrent l'essentiel des naissances. Les poids sont renormalisés. Ce n'est pas la table des 172 pays de 1 sur 8 milliards.
+        Les pays affichés sont pondérés par les naissances disponibles dans le registre. Les poids sont renormalisés et les sources sont indiquées comme des ordres de grandeur éducatifs.
       </p>
       <form
         className="row"

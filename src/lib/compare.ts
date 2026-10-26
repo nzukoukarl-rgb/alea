@@ -39,7 +39,7 @@ export const PAGES: ComparePage[] = [
       "Si vous voulez la vigile longue, le plus grand tableau de pays et l'outil déjà mûr dans dix langues, restez sur 1 sur 8 milliards. Aléa est meilleur si vous voulez une voix écrite pour votre choix, un compte, et une vie qui se termine en quelques chapitres. Ce n'est pas le même silence.",
     rows: [
       feature(
-        "Tirage selon 55 pays, paliers, voix de modèle à partir du registre seulement.",
+        "Tirage mondial pondéré, paliers, voix de modèle à partir du registre seulement.",
         "Tirage selon 172 pays, choix, temps accéléré. Les pages publiques décrivent un registre statistique, pas un modèle appelé à chaque année.",
       ),
       price("Gratuit. La voix coûte du calcul côté serveur, non facturé ici.", "Gratuit. Pas de paiement affiché sur les pages publiques consultées."),
@@ -52,7 +52,7 @@ export const PAGES: ComparePage[] = [
       ease("Un bouton, puis trois cartes aux paliers. Compte facultatif pour la voix.", "Un bouton Naître. Pas de compte. Réglages de durée et mode automatique."),
     ],
     prosAlea: ["La voix suit le choix et refuse d'inventer un fait hors registre.", "Les vies restent dans ce navigateur, la voix est liée au compte.", "Pas de publicité."],
-    consAlea: ["55 pays, pas 172. Les chiffres sont arrondis.", "La voix dépend d'un modèle et peut se taire.", "Une seule langue soignée : le français."],
+    consAlea: ["Les chiffres sont arrondis et les sources sont affichées.", "La voix dépend d'un modèle et peut se taire.", "Une seule langue soignée : le français."],
     prosOther: ["Le plus grand registre public de cette idée, et la durée longue.", "Sans compte, sans publicité, avec mémorial et mode classe.", "Déjà traduit largement."],
     consOther: ["Une vie demande une demi-heure ou plus.", "Pas d'historique relié à un courriel.", "Pas de voix générée pour le choix que vous venez de faire, d'après les pages publiques."],
     faqs: [
@@ -104,7 +104,7 @@ export const PAGES: ComparePage[] = [
       price("Gratuit.", "Gratuit à jouer, d'après le même essai."),
       free("Oui, sans publicité.", "Oui. L'essai signale un compte publicitaire et une mesure d'audience."),
       speed("Session courte en chapitres, ou plus lente.", "Environ 3 à 12 minutes, avec une accélération forte."),
-      accuracy("55 pays, sources nommées, arrondis assumés.", "Même famille de tirage. Nous n'avons pas refait l'audit de leurs tables."),
+      accuracy("Sources nommées, arrondis assumés.", "Même famille de tirage. Nous n'avons pas refait l'audit de leurs tables."),
       ease("Français, compte pour la voix.", "Plusieurs langues, prise en main immédiate."),
     ],
     prosAlea: ["Sans publicité.", "Voix liée au registre.", "Mémorial dans le navigateur."],

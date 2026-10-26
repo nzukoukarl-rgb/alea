@@ -17,6 +17,8 @@
     "smoke:ai": "node --experimental-strip-types scripts/smoke-ai.mjs"
   },
   "dependencies": {
+    "@dicebear/core": "^9.2.3",
+    "@dicebear/personas": "^9.4.2",
     "@electric-sql/pglite": "^0.5.4",
     "@hookform/resolvers": "^5.7.0",
     "@radix-ui/react-accordion": "^1.2.12",

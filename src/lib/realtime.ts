@@ -1,3 +1,5 @@
+import { COUNTRIES } from "@/lib/sim/countries";
+
 export type RealtimeData = { pib: number; esperance: number; gini: number; inflation: number; updatedAt: string; source: string; degraded?: boolean };
 const TTL = 60 * 60 * 1000;
 const cache = new Map<string, { expires: number; value: RealtimeData }>();
@@ -13,7 +15,7 @@ async function timedFetch(url: string, ms = 7000): Promise<Response> {
   try { return await fetch(url, { signal: controller.signal, headers: { accept: "application/json,text/csv" } }); } finally { clearTimeout(timer); }
 }
 async function worldBank(country: string): Promise<Partial<RealtimeData>> {
-  const code = ISO3[country] ?? country.toUpperCase().slice(0, 3);
+  const code = ISO3[country] ?? COUNTRIES.find((item) => item.name === country)?.iso.toUpperCase() ?? country.toUpperCase().slice(0, 3);
   const [gdp, le] = await Promise.all([
     timedFetch(`https://api.worldbank.org/v2/country/${encodeURIComponent(code)}/indicator/NY.GDP.PCAP.PP.CD?format=json&per_page=5`),
     timedFetch(`https://api.worldbank.org/v2/country/${encodeURIComponent(code)}/indicator/SP.DYN.LE00.IN?format=json&per_page=5`),
@@ -39,7 +41,7 @@ export async function getRealtimeData(country: string): Promise<RealtimeData> {
   if (!normalized || !/^[\p{L} .'-]{2,60}$/u.test(normalized)) throw new Error("invalid-country");
   const cached = cache.get(normalized); if (cached && cached.expires > Date.now()) return cached.value;
   const fallback = FALLBACKS[normalized];
-  if (!fallback && !ISO3[normalized]) throw new Error("unknown-country");
+  if (!fallback && !ISO3[normalized] && !COUNTRIES.some((item) => item.name === normalized)) throw new Error("unknown-country");
   const [wb, gini] = await Promise.allSettled([worldBank(normalized), owid(normalized)]);
   const base = fallback ?? { pib: 10000, esperance: 72, gini: 35, inflation: 4, updatedAt: new Date().toISOString(), source: "sources externes" };
   const value: RealtimeData = { ...base, ...wb.status === "fulfilled" ? wb.value : {}, ...gini.status === "fulfilled" ? gini.value : {}, updatedAt: new Date().toISOString(), source: "World Bank + OWID", degraded: wb.status === "rejected" || gini.status === "rejected" };

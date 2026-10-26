@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Card2_5D } from "@/components/effects/Card2_5D";
+import { LifeSprite } from "@/components/life-sprite";
 import { narrateVoice } from "@/lib/ai/voice";
 import { speakFallback } from "@/lib/voice-client";
 import {
@@ -72,7 +74,7 @@ export function LifeView({ life, onChange }: { life: LifeState; onChange: (life:
 
   return (
     <div className="life">
-      <aside>
+      <Card2_5D className="life-aside"><aside>
         <p className="kicker">{life.archive ? "archive" : life.alive ? "en cours" : "close"}</p>
         <p className="age">
           {life.age}
@@ -86,6 +88,7 @@ export function LifeView({ life, onChange }: { life: LifeState; onChange: (life:
         <p className="small">
           {sexLabel(life.sex)} · {decile(life.percentile)}e décile · environ {grouped(incomePerPerson(life))} $ PPA
         </p>
+        <LifeSprite sex={life.sex} age={life.age} seed={life.seed} />
         <div className="bars">
           <Bar label="Santé" value={life.sante} />
           <Bar label="Lien" value={life.lien} />
@@ -94,7 +97,7 @@ export function LifeView({ life, onChange }: { life: LifeState; onChange: (life:
         </div>
         <p className="small">Le mode automatique protège le {priorityLabel(life.priority)}.</p>
         {life.cause ? <p className="small">Cause du registre : {causeLabel(life.cause)}.</p> : null}
-      </aside>
+      </aside></Card2_5D>
       <section className="stack">
         {pending ? <p className="banner ok">Le registre écrit…</p> : null}
         {life.voiceError ? <p className="banner bad">{life.voiceError}</p> : null}

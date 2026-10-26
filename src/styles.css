@@ -209,7 +209,7 @@ textarea { min-height: 88px; }
 .birth-intro { max-width: 620px; margin-bottom: 22px; }
 .birth-intro h2 { font-size: clamp(42px, 8vw, 76px); margin: 0 0 12px; color: #FF4D7A; }
 .birth-stage { position: relative; max-width: 1020px; margin: 0 auto; }
-.card-2-5d { transform: perspective(1000px) rotateX(5deg) rotateY(-5deg); transition: transform .4s ease, box-shadow .4s ease; will-change: transform; }
+.card-2-5d { will-change: transform, box-shadow; transform-style: preserve-3d; }
 .birth-certificate { position: relative; overflow: hidden; padding: clamp(22px, 4vw, 46px); background: #FF4D7A; color: #16070B; border: 0; border-radius: 4px; box-shadow: 0 22px 80px -30px rgba(255,77,122,.85); }
 .birth-certificate::before { content: ""; position: absolute; inset: 14px; border: 1px solid rgba(22,7,11,.25); pointer-events: none; }
 .birth-certificate__masthead, .birth-certificate__footer { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; }
@@ -245,3 +245,42 @@ textarea { min-height: 88px; }
 @media (max-width: 700px) { .birth-certificate { padding: 20px; } .birth-certificate__masthead, .birth-certificate__footer { align-items: flex-start; flex-direction: column; } .birth-grid { grid-template-columns: 1fr 1fr; } .birth-certificate h1 { font-size: 68px; } .card-2-5d { transform: none; } }
 @media (prefers-reduced-motion: reduce) { .card-2-5d, .pixel-shelf span, .confetti { animation: none; transition: none; }
 }
+
+/* V4: navigation compacte, sprites pixel et surface 2.5D pilotée par Motion. */
+.menu-toggle { display: none; }
+.header-actions { display: flex; align-items: center; gap: 8px; }
+.life-aside { padding: 18px; align-self: start; }
+.life-card { min-height: 180px; }
+.life-card__link { min-height: 140px; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: inherit; text-decoration: none; }
+.life-card h3 { margin: 0 0 8px; }
+.life-sprite { --sprite-hue: 220deg; position: relative; width: 72px; height: 108px; flex: 0 0 72px; image-rendering: pixelated; filter: drop-shadow(5px 7px 0 rgba(0,0,0,.22)); transform: scale(1); transition: transform .2s ease-out, filter .2s ease-out; }
+.life-sprite:hover { transform: translateY(-3px) scale(1.04); }
+.sprite-head, .sprite-body, .sprite-leg { position: absolute; display: block; }
+.sprite-head { width: 28px; height: 28px; top: 8px; left: 22px; background: hsl(var(--sprite-hue) 38% 72%); box-shadow: 4px 0 0 rgba(30,15,20,.85), 0 4px 0 rgba(30,15,20,.85); }
+.sprite-body { width: 38px; height: 44px; top: 39px; left: 17px; background: hsl(calc(var(--sprite-hue) + 90deg) 65% 55%); box-shadow: 4px 4px 0 rgba(30,15,20,.85); }
+.sprite-leg { width: 12px; height: 28px; top: 83px; background: #241727; }
+.sprite-leg--a { left: 19px; }.sprite-leg--b { left: 39px; }
+.life-sprite--0 { transform: scale(.58); transform-origin: bottom center; }.life-sprite--5 { transform: scale(.72); transform-origin: bottom center; }.life-sprite--15 { transform: scale(.86); transform-origin: bottom center; }.life-sprite--60 { filter: grayscale(.25) drop-shadow(5px 7px 0 rgba(0,0,0,.22)); }
+.pixel-diamond, .pixel-star, .pixel-person { position: relative; display: inline-block; width: 18px; height: 18px; background: #FFDA69; image-rendering: pixelated; }
+.pixel-diamond { transform: rotate(45deg) scale(.72); }.pixel-star { clip-path: polygon(50% 0, 62% 36%, 100% 38%, 70% 60%, 80% 100%, 50% 76%, 20% 100%, 30% 60%, 0 38%, 38% 36%); }.pixel-person { width: 12px; height: 26px; background: #16070B; box-shadow: 0 -8px 0 2px #FFDA69; }
+@media (max-width: 700px) {
+  .top { padding: 10px 14px; gap: 8px 10px; }
+  .brand { font-size: 20px; margin-right: auto; }
+  .menu-toggle { display: inline-flex; }
+  .nav { display: none; order: 3; width: 100%; margin-left: 0; padding: 8px 0; border-top: 1px solid var(--rule); }
+  .nav.nav--open { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px 12px; }
+  .nav a { min-height: 44px; }
+  .header-actions { order: 4; width: 100%; justify-content: flex-start; overflow-x: auto; padding-bottom: 2px; }
+  .header-actions .ghost { font-size: 13px; padding-inline: 12px; white-space: nowrap; }
+  .birth-page { padding-top: 18px; }
+  .birth-certificate__number { font-size: 9px; overflow-wrap: anywhere; }
+  .birth-certificate h1 { font-size: clamp(48px, 16vw, 68px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-2-5d, .life-sprite, .pixel-shelf span { transform: none !important; transition: none !important; will-change: auto !important; }
+}
+
+.life-sprite img { display: block; width: 72px; height: 72px; image-rendering: pixelated; border-radius: 12px; background: var(--accent-soft); filter: saturate(.9) contrast(1.05); }
+.life-sprite--0 img { width: 50px; height: 50px; margin: 22px auto 0; }
+.life-sprite--5 img { width: 58px; height: 58px; margin: 14px auto 0; }
+.sprite-pixel-glow { position: absolute; right: 4px; bottom: 8px; width: 8px; height: 8px; background: var(--accent); box-shadow: 5px 0 0 var(--accent), 0 5px 0 var(--accent); opacity: .85; }
