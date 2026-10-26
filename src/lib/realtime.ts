@@ -29,7 +29,9 @@ async function owid(country: string): Promise<Partial<RealtimeData>> {
   const response = await timedFetch(url);
   if (!response.ok) throw new Error("owid-unavailable");
   const rows = (await response.text()).trim().split("\n").slice(1).map((row) => row.split(","));
-  const row = rows.at(-1); const value = Number(row?.at(-1));
+  const matching = rows.filter((row) => row[0]?.toLowerCase() === country.toLowerCase());
+  const row = matching.at(-1) ?? rows.at(-1);
+  const value = Number(row?.[3] ?? row?.at(-1));
   return { gini: Number.isFinite(value) ? value * (value <= 1 ? 100 : 1) : FALLBACKS[country]?.gini ?? 35 };
 }
 export async function getRealtimeData(country: string): Promise<RealtimeData> {
