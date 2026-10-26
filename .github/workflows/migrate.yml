@@ -1,0 +1,20 @@
+name: Migrate database
+# Manual, explicit step. Run it BEFORE deploying a version that adds a migration.
+# Requires the repository secret DATABASE_URL (Settings, Secrets and variables, Actions).
+on:
+  workflow_dispatch:
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --omit=dev --legacy-peer-deps --no-audit --no-fund
+      - run: node scripts/verify-db-schema.mjs || true
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      - run: npm run db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}

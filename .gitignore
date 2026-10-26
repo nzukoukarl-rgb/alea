@@ -1,0 +1,17 @@
+node_modules/
+.vercel/
+.output/
+dist/
+.nitro/
+.tanstack/
+*.log
+.DS_Store
+
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+.grok/server-secrets.json
+
+# Rust build output (alea/ crate)
+alea/target/
